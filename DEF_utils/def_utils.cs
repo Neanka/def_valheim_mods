@@ -45,8 +45,11 @@ namespace DEF_utils
 
             if (Input.GetKeyDown(KeyCode.F11))
             {
-                Logger.LogInfo("debug button pressed");
-
+                logger.LogInfo("debug button pressed");
+                foreach (Player.Food food in Player.m_localPlayer.GetFoods())
+                {
+                    logger.LogWarning("trace_values " + food.m_health + " " + food.m_stamina); 
+                }
             }
         }
         [HarmonyPatch(typeof(FejdStartup), "OnJoinIPOpen")]
