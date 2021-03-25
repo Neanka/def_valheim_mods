@@ -46,10 +46,15 @@ namespace DEF_utils
             if (Input.GetKeyDown(KeyCode.F11))
             {
                 logger.LogInfo("debug button pressed");
-                foreach (Player.Food food in Player.m_localPlayer.GetFoods())
+                logger.LogInfo("in private area: "+ PrivateArea.CheckInPrivateArea(player.transform.position));
+                /*
+                logger.LogWarning("object db se " + ObjectDB.instance.m_StatusEffects.Count);
+                foreach (StatusEffect item in ObjectDB.instance.m_StatusEffects)
                 {
-                    logger.LogWarning("trace_values " + food.m_health + " " + food.m_stamina); 
-                }
+                    logger.LogWarning("name "+ item.m_name+ " icon " + item.m_icon);
+                    player.GetSEMan().AddStatusEffect(item);
+
+                }*/
             }
         }
         [HarmonyPatch(typeof(FejdStartup), "OnJoinIPOpen")]
@@ -69,6 +74,14 @@ namespace DEF_utils
                 string text = "secret";
                 InputField componentInChildren = ___m_passwordDialog.GetComponentInChildren<InputField>();
                 componentInChildren.text = text;
+            }
+        }
+        [HarmonyPatch(typeof(ObjectDB), "Awake")]
+        static class Awake_Patch
+        {
+            static void Postfix()
+            {
+                logger.LogWarning("object db se " + ObjectDB.instance.m_StatusEffects.Count);
             }
         }
     }

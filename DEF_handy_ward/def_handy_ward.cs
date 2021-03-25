@@ -28,6 +28,9 @@ namespace DEF_handy_ward
         private static ConfigEntry<bool> configEnableFoodDrainReduction;
         private static ConfigEntry<float> configFoodDrainReductionPercent;
 
+        private static ConfigEntry<float> configPrivateAreaRadius;
+        private static ConfigEntry<float> configConstructionDamageReduction;
+
         public static long l_saved_time;
 
         private Harmony _harmony;
@@ -49,6 +52,9 @@ namespace DEF_handy_ward
 
             configEnableFoodDrainReduction = Config.Bind("Food drain", "Enable food drain reduction", true, "Enable food drain reduction in the ward area");
             configFoodDrainReductionPercent = Config.Bind("Food drain", "Food drain reduction amount", 50f, new ConfigDescription("Food drain reduction amount", new AcceptableValueRange<float>(0, 100)));
+
+            configPrivateAreaRadius = Config.Bind("Tweaks", "Private area radius", 32f, new ConfigDescription("Set up ward privat area radius", new AcceptableValueRange<float>(0, 200)));
+            configConstructionDamageReduction = Config.Bind("Tweaks", "Reduce construction incoming damage", 0f, new ConfigDescription("Reduce construction incoming damage", new AcceptableValueRange<float>(0, 100)));
 
             logger = Logger;
             logger.LogInfo("Hello, world!");
@@ -142,5 +148,61 @@ namespace DEF_handy_ward
                 return codes.AsEnumerable();
             }
         }
+        [HarmonyPatch(typeof(PrivateArea), "IsInside")]
+        static class IsInside_Patch
+        {
+            static void Prefix(ref float ___m_radius)
+            {
+                ___m_radius = configPrivateAreaRadius.Value;
+            }
+        }
+        [HarmonyPatch(typeof(WearNTear), "RPC_Damage")]
+        static class RPC_Damage_Patch
+        {
+            static bool Prefix(WearNTear __instance, ref HitData hit)
+            {
+                ZNetView view = (ZNetView)GetInstanceField(__instance, "m_nview");
+                if (view != null)
+                {
+                    if (PrivateArea.CheckInPrivateArea(__instance.transform.position))
+                    {
+                        hit.m_damage.m_blunt = hit.m_damage.m_blunt * (1 - configConstructionDamageReduction.Value / 100);
+                        hit.m_damage.m_slash = hit.m_damage.m_slash * (1 - configConstructionDamageReduction.Value / 100);
+                        hit.m_damage.m_pierce = hit.m_damage.m_pierce * (1 - configConstructionDamageReduction.Value / 100);
+                        hit.m_damage.m_chop = hit.m_damage.m_chop * (1 - configConstructionDamageReduction.Value / 100);
+                        hit.m_damage.m_pickaxe = hit.m_damage.m_pickaxe * (1 - configConstructionDamageReduction.Value / 100);
+                        hit.m_damage.m_fire = hit.m_damage.m_fire * (1 - configConstructionDamageReduction.Value / 100);
+                        hit.m_damage.m_frost = hit.m_damage.m_frost * (1 - configConstructionDamageReduction.Value / 100);
+                        hit.m_damage.m_lightning = hit.m_damage.m_lightning * (1 - configConstructionDamageReduction.Value / 100);
+                        hit.m_damage.m_poison = hit.m_damage.m_poison * (1 - configConstructionDamageReduction.Value / 100);
+                        hit.m_damage.m_spirit = hit.m_damage.m_spirit * (1 - configConstructionDamageReduction.Value / 100);
+                    }
+                }
+                return true;
+            }
+        }
+        /*public static float getShieldScale()
+        {
+            logger.LogWarning("scale: "+ configPrivateAreaRadius.Value / 10f);
+            return configPrivateAreaRadius.Value/10f;
+        }
+        [HarmonyPatch(typeof(PrivateArea), "RPC_FlashShield")]
+        private class RPC_FlashShield_Patch
+        {
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            {
+                var gss = typeof(Def_handy_ward).GetMethod("getShieldScale", BindingFlags.Public | BindingFlags.Static);
+                var codes = new List<CodeInstruction>(instructions);
+                for (int i = 0; i < codes.Count; i++)
+                {
+                    if (codes[i].opcode == OpCodes.Ldc_R4)
+                    {
+                        codes[i].opcode = OpCodes.Call;
+                        codes[i].operand = gss;
+                    }
+                }
+                return codes.AsEnumerable();
+            }
+        }*/
     }
 }

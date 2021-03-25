@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DEF_utils", "DEF_utils\DEF_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DEF_handy_ward", "DEF_handy_ward\DEF_handy_ward.csproj", "{341DAA63-E88C-409A-9BC4-74E011C6D0DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "toggle_minimap", "toggle_minimap\toggle_minimap.csproj", "{2672E782-7B49-48F7-A5FF-8F77F6ADD2D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "always_announce_biome_entering", "always_announce_biome_entering\always_announce_biome_entering.csproj", "{EB43894C-3F42-4A61-9D1F-74A38D3B9FA4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{341DAA63-E88C-409A-9BC4-74E011C6D0DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{341DAA63-E88C-409A-9BC4-74E011C6D0DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{341DAA63-E88C-409A-9BC4-74E011C6D0DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2672E782-7B49-48F7-A5FF-8F77F6ADD2D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2672E782-7B49-48F7-A5FF-8F77F6ADD2D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2672E782-7B49-48F7-A5FF-8F77F6ADD2D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2672E782-7B49-48F7-A5FF-8F77F6ADD2D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB43894C-3F42-4A61-9D1F-74A38D3B9FA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB43894C-3F42-4A61-9D1F-74A38D3B9FA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB43894C-3F42-4A61-9D1F-74A38D3B9FA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB43894C-3F42-4A61-9D1F-74A38D3B9FA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
