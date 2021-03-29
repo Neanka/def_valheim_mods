@@ -4,6 +4,8 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Resources;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -47,6 +49,8 @@ namespace DEF_utils
             {
                 logger.LogInfo("debug button pressed");
                 logger.LogInfo("in private area: "+ PrivateArea.CheckInPrivateArea(player.transform.position));
+
+
                 /*
                 logger.LogWarning("object db se " + ObjectDB.instance.m_StatusEffects.Count);
                 foreach (StatusEffect item in ObjectDB.instance.m_StatusEffects)

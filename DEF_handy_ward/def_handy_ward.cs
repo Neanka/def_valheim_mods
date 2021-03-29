@@ -15,7 +15,7 @@ namespace DEF_handy_ward
     {
         const string pluginGUID = "neanka.def_handy_ward";
         const string pluginName = "DEF handy wards";
-        const string pluginVersion = "1.0.0.0";
+        const string pluginVersion = "1.0.0.3";
         public static ManualLogSource logger;
 
         private static ConfigEntry<bool> configEnableAutoRepair;
@@ -29,7 +29,11 @@ namespace DEF_handy_ward
         private static ConfigEntry<float> configFoodDrainReductionPercent;
 
         private static ConfigEntry<float> configPrivateAreaRadius;
+        private static ConfigEntry<bool> configDamageReductionFromPlayers;
+        private static ConfigEntry<bool> configDamageReductionFromMonsters;
         private static ConfigEntry<float> configConstructionDamageReduction;
+        private static ConfigEntry<float> configPlantsDamageReduction;
+        private static ConfigEntry<float> configFloraDamageReduction;
 
         public static long l_saved_time;
 
@@ -54,7 +58,11 @@ namespace DEF_handy_ward
             configFoodDrainReductionPercent = Config.Bind("Food drain", "Food drain reduction amount", 50f, new ConfigDescription("Food drain reduction amount", new AcceptableValueRange<float>(0, 100)));
 
             configPrivateAreaRadius = Config.Bind("Tweaks", "Private area radius", 32f, new ConfigDescription("Set up ward privat area radius", new AcceptableValueRange<float>(0, 200)));
+            configDamageReductionFromPlayers = Config.Bind("Tweaks", "Enable damage reduction from players", true, "Enable damage reduction from players");
+            configDamageReductionFromMonsters = Config.Bind("Tweaks", "Enable damage reduction from monsters", true, "Enable damage reduction from monsters");
             configConstructionDamageReduction = Config.Bind("Tweaks", "Reduce construction incoming damage", 0f, new ConfigDescription("Reduce construction incoming damage", new AcceptableValueRange<float>(0, 100)));
+            configPlantsDamageReduction = Config.Bind("Tweaks", "Reduce plants incoming damage", 0f, new ConfigDescription("Reduce plants incoming damage", new AcceptableValueRange<float>(0, 100)));
+            configFloraDamageReduction = Config.Bind("Tweaks", "Reduce flora incoming damage", 0f, new ConfigDescription("Reduce flora incoming damage", new AcceptableValueRange<float>(0, 100)));
 
             logger = Logger;
             logger.LogInfo("Hello, world!");
@@ -156,26 +164,99 @@ namespace DEF_handy_ward
                 ___m_radius = configPrivateAreaRadius.Value;
             }
         }
-        [HarmonyPatch(typeof(WearNTear), "RPC_Damage")]
-        static class RPC_Damage_Patch
+        public static void ApplyDamageReduction(ref HitData hit, float value)
         {
-            static bool Prefix(WearNTear __instance, ref HitData hit)
+            if (hit.GetAttacker().IsPlayer())
             {
-                ZNetView view = (ZNetView)GetInstanceField(__instance, "m_nview");
-                if (view != null)
+                if (!configDamageReductionFromPlayers.Value)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (!configDamageReductionFromMonsters.Value)
+                {
+                    return;
+                }
+            }
+            hit.m_damage.m_blunt = hit.m_damage.m_blunt * (1 - value / 100);
+            hit.m_damage.m_slash = hit.m_damage.m_slash * (1 - value / 100);
+            hit.m_damage.m_pierce = hit.m_damage.m_pierce * (1 - value / 100);
+            hit.m_damage.m_chop = hit.m_damage.m_chop * (1 - value / 100);
+            hit.m_damage.m_pickaxe = hit.m_damage.m_pickaxe * (1 - value / 100);
+            hit.m_damage.m_fire = hit.m_damage.m_fire * (1 - value / 100);
+            hit.m_damage.m_frost = hit.m_damage.m_frost * (1 - value / 100);
+            hit.m_damage.m_lightning = hit.m_damage.m_lightning * (1 - value / 100);
+            hit.m_damage.m_poison = hit.m_damage.m_poison * (1 - value / 100);
+            hit.m_damage.m_spirit = hit.m_damage.m_spirit * (1 - value / 100);
+        }
+        [HarmonyPatch(typeof(WearNTear), "RPC_Damage")]
+        static class WearNTear_RPC_Damage_Patch
+        {
+            static bool Prefix(WearNTear __instance, ref HitData hit, ZNetView ___m_nview)
+            {
+                if (___m_nview != null)
                 {
                     if (PrivateArea.CheckInPrivateArea(__instance.transform.position))
                     {
-                        hit.m_damage.m_blunt = hit.m_damage.m_blunt * (1 - configConstructionDamageReduction.Value / 100);
-                        hit.m_damage.m_slash = hit.m_damage.m_slash * (1 - configConstructionDamageReduction.Value / 100);
-                        hit.m_damage.m_pierce = hit.m_damage.m_pierce * (1 - configConstructionDamageReduction.Value / 100);
-                        hit.m_damage.m_chop = hit.m_damage.m_chop * (1 - configConstructionDamageReduction.Value / 100);
-                        hit.m_damage.m_pickaxe = hit.m_damage.m_pickaxe * (1 - configConstructionDamageReduction.Value / 100);
-                        hit.m_damage.m_fire = hit.m_damage.m_fire * (1 - configConstructionDamageReduction.Value / 100);
-                        hit.m_damage.m_frost = hit.m_damage.m_frost * (1 - configConstructionDamageReduction.Value / 100);
-                        hit.m_damage.m_lightning = hit.m_damage.m_lightning * (1 - configConstructionDamageReduction.Value / 100);
-                        hit.m_damage.m_poison = hit.m_damage.m_poison * (1 - configConstructionDamageReduction.Value / 100);
-                        hit.m_damage.m_spirit = hit.m_damage.m_spirit * (1 - configConstructionDamageReduction.Value / 100);
+                        ApplyDamageReduction(ref hit, configConstructionDamageReduction.Value);
+                    }
+                }
+                return true;
+            }
+        }
+        [HarmonyPatch(typeof(TreeBase), "RPC_Damage")]
+        static class TreeBase_RPC_Damage_Patch
+        {
+            static bool Prefix(TreeBase __instance, ref HitData hit, ZNetView ___m_nview)
+            {
+                if (___m_nview != null)
+                {
+                    if (PrivateArea.CheckInPrivateArea(__instance.transform.position))
+                    {
+                        ApplyDamageReduction(ref hit, configFloraDamageReduction.Value);
+                    }
+                }
+                return true;
+            }
+        }
+        [HarmonyPatch(typeof(TreeLog), "RPC_Damage")]
+        static class TreeLog_RPC_Damage_Patch
+        {
+            static bool Prefix(TreeLog __instance, ref HitData hit, ZNetView ___m_nview)
+            {
+                if (___m_nview != null)
+                {
+                    if (PrivateArea.CheckInPrivateArea(__instance.transform.position))
+                    {
+                        ApplyDamageReduction(ref hit, configFloraDamageReduction.Value);
+                    }
+                }
+                return true;
+            }
+        }
+        [HarmonyPatch(typeof(Destructible), "RPC_Damage")]
+        static class Destructible_RPC_Damage_Patch
+        {
+            static bool Prefix(Destructible __instance, ref HitData hit, ZNetView ___m_nview)
+            {
+                if (___m_nview != null)
+                {
+                    if (PrivateArea.CheckInPrivateArea(__instance.transform.position))
+                    {
+                        if (configPlantsDamageReduction.Value > 0)
+                        {
+                            var name = ___m_nview.GetPrefabName().ToLower();
+                            if (name.Contains("carrot") || name.Contains("barley") || name.Contains("turnip") || name.Contains("flax"))
+                            {
+                                ApplyDamageReduction(ref hit, configPlantsDamageReduction.Value);
+                            }
+                        }
+                        else
+                        {
+                            ApplyDamageReduction(ref hit, configFloraDamageReduction.Value);
+                        }
                     }
                 }
                 return true;

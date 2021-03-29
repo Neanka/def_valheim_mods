@@ -71,6 +71,9 @@
     <Compile Include="def_utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CartIcon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "E:\Games\SteamLibrary\steamapps\common\Valheim\BepInEx\scripts\$(TargetFileName)"</PostBuildEvent>

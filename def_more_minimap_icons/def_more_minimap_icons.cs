@@ -32,6 +32,15 @@ namespace DEF_More_minimap_icons
             if (Input.GetKeyDown(KeyCode.F10))
             {
                 Logger.LogInfo("debug button pressed"); Transform largemap = Minimap.instance.m_selectedIcon0.transform.parent.parent.parent;
+                Component[] objs = largemap.gameObject.GetComponents(typeof(Component));
+                foreach (var item in objs)
+                {
+                    logger.LogWarning(item);
+                }
+                for (int i = 0; i < largemap.childCount; i++)
+                {
+                    logger.LogWarning(largemap.GetChild(i));
+                }
                 RectTransform iconpanel = (RectTransform)largemap.GetChild(2);
                 iconpanel.sizeDelta = new Vector2(500, 500);
             }
