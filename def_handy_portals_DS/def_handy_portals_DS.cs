@@ -54,7 +54,7 @@ namespace def_handy_portals_DS
                 if (tp_list_size != toSync.Count)
                 {
                     tp_list_size = toSync.Count;
-                    //logger.LogWarning("CreateSyncList_Patch: tp list size " + toSync.Count);
+                    logger.LogWarning("CreateSyncList_Patch: tp list size " + toSync.Count);
                 }
             }
         }

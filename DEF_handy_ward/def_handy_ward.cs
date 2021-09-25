@@ -41,9 +41,9 @@ namespace DEF_handy_ward
 
         private static object GetInstanceField<T>(T instance, string fieldName)
         {
-            BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
-            FieldInfo field = typeof(T).GetField(fieldName, bindFlags);
-            return field.GetValue(instance);
+            const BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+            var field = typeof(T).GetField(fieldName, bindFlags);
+            return field?.GetValue(instance);
         }
         void Awake()
         {
@@ -93,13 +93,11 @@ namespace DEF_handy_ward
                                 if (PrivateArea.CheckInPrivateArea(item.transform.position))
                                 {
                                     float health = view.GetZDO().GetFloat("health");
-                                    if (health > 0 && health < item.m_health)
-                                    {
-                                        float res_health = health + item.m_health * configRepairAmountPercent.Value / 100;
-                                        if (res_health > item.m_health) res_health = item.m_health;
-                                        view.GetZDO().Set("health", res_health);
-                                        view.InvokeRPC(ZNetView.Everybody, "WNTHealthChanged", new object[] { res_health });
-                                    }
+                                    if (!(health > 0) || !(health < item.m_health)) continue;
+                                    var res_health = health + item.m_health * configRepairAmountPercent.Value / 100;
+                                    if (res_health > item.m_health) res_health = item.m_health;
+                                    view.GetZDO().Set("health", res_health);
+                                    view.InvokeRPC(ZNetView.Everybody, "WNTHealthChanged", new object[] { res_health });
                                 }
                             }
                         }
@@ -108,7 +106,7 @@ namespace DEF_handy_ward
             }
         }
         [HarmonyPatch(typeof(Player), "RPC_UseStamina")]
-        static class RPC_UseStamina_Patch
+        static class RPCUseStaminaPatch
         {
             static void Prefix(long sender, ref float v)
             {
@@ -166,6 +164,10 @@ namespace DEF_handy_ward
         }
         public static void ApplyDamageReduction(ref HitData hit, float value)
         {
+            if (hit == null || hit.GetAttacker() == null)
+            {
+                return;
+            }
             if (hit.GetAttacker().IsPlayer())
             {
                 if (!configDamageReductionFromPlayers.Value)

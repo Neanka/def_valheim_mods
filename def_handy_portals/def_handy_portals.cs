@@ -342,10 +342,15 @@ namespace def_handy_portals
                             tp_list.Add(temp_zdo, temp_data);
                             ZDOMan.instance.ForceSendZDO(temp_zdo.m_uid);
                         }
-                        //else
-                        //{
-                        //    ZRoutedRpc.instance.InvokeRoutedRPC("RequestPortalZDOs", new object[] { new ZPackage() });
-                        //}
+                        else
+                        {
+                            ZDO temp_zdo = ___m_nview.GetZDO();
+                            var list = (List<int>)GetInstanceField(ZDOMan.instance, "m_peers");
+                            logger.LogWarning("portal placed ");
+                            logger.LogWarning("m_peers count: "+ list.Count);
+                            ZDOMan.instance.ForceSendZDO(temp_zdo.m_uid);
+                            //ZRoutedRpc.instance.InvokeRoutedRPC("RequestPortalZDOs", new object[] { new ZPackage() });
+                        }
                     }
                 }
             }
@@ -364,6 +369,7 @@ namespace def_handy_portals
         }
         public static ZDO GetClosestTP()
         {
+            logger.LogWarning("GetClosestTP");
             MethodInfo dynMethod = Minimap.instance.GetType().GetMethod("ScreenToWorldPoint", BindingFlags.NonPublic | BindingFlags.Instance);
             Vector3 pos = (Vector3)dynMethod.Invoke(Minimap.instance, new object[] { Input.mousePosition });
             Minimap.PinData pinData = null;
@@ -530,8 +536,9 @@ namespace def_handy_portals
 
         static public void SetMapMode(int mode) // 1 small 2 large
         {
-            MethodInfo dynMethod = Minimap.instance.GetType().GetMethod("SetMapMode", BindingFlags.NonPublic | BindingFlags.Instance);
-            dynMethod.Invoke(Minimap.instance, new object[] { mode });
+            //MethodInfo dynMethod = Minimap.instance.GetType().GetMethod("SetMapMode", BindingFlags.NonPublic | BindingFlags.Instance);
+            //dynMethod.Invoke(Minimap.instance, new object[] { mode });
+            Minimap.instance.SetMapMode((Minimap.MapMode)mode);
         }
 
         [HarmonyPatch(typeof(TeleportWorldTrigger), "OnTriggerEnter")]

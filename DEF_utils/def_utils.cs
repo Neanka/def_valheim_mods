@@ -1,11 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Resources;
-using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,6 +36,8 @@ namespace DEF_utils
         {
             _harmony?.UnpatchSelf();
         }
+
+        
         private void Update()
         {
             var player = Player.m_localPlayer;
@@ -48,7 +47,9 @@ namespace DEF_utils
             if (Input.GetKeyDown(KeyCode.F11))
             {
                 logger.LogInfo("debug button pressed");
-                logger.LogInfo("in private area: "+ PrivateArea.CheckInPrivateArea(player.transform.position));
+                logger.LogWarning(player.transform.position);
+                
+                logger.LogInfo("pvp status: "+ player.IsPVPEnabled());
 
 
                 /*
