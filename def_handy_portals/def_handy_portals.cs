@@ -17,7 +17,7 @@ namespace def_handy_portals
     {
         const string pluginGUID = "neanka.def_handy_portals";
         const string pluginName = "DEF handy portals";
-        const string pluginVersion = "1.0.0.5";
+        const string pluginVersion = "1.0.0.7";
         public static ManualLogSource logger;
 
         private static ConfigEntry<string> configPortalNamePrefix;
@@ -35,7 +35,7 @@ namespace def_handy_portals
         private static bool isTPmode = false;
         private static bool list_populated = false;
         public static readonly string portal_name = "portal_wood";
-        public static Minimap.PinType portal_pin_type = (Minimap.PinType)140;
+        public static Minimap.PinType portal_pin_type = (Minimap.PinType)104;
 
         void Awake()
         {
@@ -85,7 +85,6 @@ namespace def_handy_portals
             tplist = new List<ZDO>();
             tp_list = new Dictionary<ZDO, Minimap.PinData>();
             ZDOMan.instance.GetAllZDOsWithPrefab(portal_name, tplist);
-            //logger.LogWarning("list size "+ tplist.Count);
             List<Minimap.PinData> m_pins = (List<Minimap.PinData>)GetInstanceField(Minimap.instance, "m_pins");
             foreach (Minimap.PinData item in m_pins.ToList())
             {
@@ -103,6 +102,7 @@ namespace def_handy_portals
                     ZDOMan.instance.ForceSendZDO(item.m_uid);
                 }
             }
+            logger.LogWarning("m_pins list size " + m_pins.Count);
         }
 
         public static void Do_magic()
@@ -167,13 +167,17 @@ namespace def_handy_portals
             Transform largemap = Minimap.instance.m_selectedIcon0.transform.parent.parent.parent;
             largemap.GetChild(2).gameObject.SetActive(false);
             largemap.GetChild(3).gameObject.SetActive(false);
+            largemap.GetChild(5).gameObject.SetActive(false);
+            largemap.GetChild(6).gameObject.SetActive(false);
         }
         private static void LeaveTPMode()
         {
             isTPmode = false;
             Transform largemap = Minimap.instance.m_selectedIcon0.transform.parent.parent.parent;
-            largemap.GetChild(2).gameObject.SetActive(true);
-            largemap.GetChild(3).gameObject.SetActive(true);
+            largemap.GetChild(2).gameObject.SetActive(false);
+            largemap.GetChild(3).gameObject.SetActive(false);
+            largemap.GetChild(5).gameObject.SetActive(true);
+            largemap.GetChild(6).gameObject.SetActive(true);
             //MethodInfo dynMethod = Minimap.instance.GetType().GetMethod("UpdatePins", BindingFlags.NonPublic | BindingFlags.Instance);
             //dynMethod.Invoke(Minimap.instance, null);
         }
@@ -246,9 +250,14 @@ namespace def_handy_portals
         [HarmonyPatch(typeof(Minimap), "Start")]
         private class Start_Patch
         {
-            static void Postfix(Minimap __instance)
+            static void Postfix(Minimap __instance, ref bool[] ___m_visibleIconTypes)
             {
                 //logger.LogWarning(" Minimap Start ");
+                ___m_visibleIconTypes = new bool[1000];
+                for (int i = 0; i < ___m_visibleIconTypes.Length; i++)
+                {
+                    ___m_visibleIconTypes[i] = true;
+                }
                 list_populated = false;
                 tplist = null;
                 tp_list = null;

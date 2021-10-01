@@ -12,7 +12,7 @@ namespace def_handy_portals_DS
     {
         const string pluginGUID = "neanka.def_handy_portals_DS";
         const string pluginName = "DEF handy portals DS";
-        const string pluginVersion = "1.0.0.5";
+        const string pluginVersion = "1.0.0.7";
 
         private Harmony _harmony;
 
