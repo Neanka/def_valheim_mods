@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31025.194
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DEF_handy_portals", "def_handy_portals\DEF_handy_portals.csproj", "{921C04E2-6724-46F9-AC5F-18C02C9DB610}"
 EndProject
@@ -16,10 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "toggle_minimap", "toggle_minimap\toggle_minimap.csproj", "{2672E782-7B49-48F7-A5FF-8F77F6ADD2D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "always_announce_biome_entering", "always_announce_biome_entering\always_announce_biome_entering.csproj", "{EB43894C-3F42-4A61-9D1F-74A38D3B9FA4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vh89_server", "Vh89_server\Vh89_server.csproj", "{8CA5E6C0-C8F4-40B4-940A-E73E9DA99FD6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vh89_client", "Vh89_client\Vh89_client.csproj", "{AE695539-5615-4073-B576-4BD64193A5CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,14 +51,6 @@ Global
 		{EB43894C-3F42-4A61-9D1F-74A38D3B9FA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB43894C-3F42-4A61-9D1F-74A38D3B9FA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB43894C-3F42-4A61-9D1F-74A38D3B9FA4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8CA5E6C0-C8F4-40B4-940A-E73E9DA99FD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8CA5E6C0-C8F4-40B4-940A-E73E9DA99FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8CA5E6C0-C8F4-40B4-940A-E73E9DA99FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8CA5E6C0-C8F4-40B4-940A-E73E9DA99FD6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AE695539-5615-4073-B576-4BD64193A5CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE695539-5615-4073-B576-4BD64193A5CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AE695539-5615-4073-B576-4BD64193A5CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AE695539-5615-4073-B576-4BD64193A5CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
