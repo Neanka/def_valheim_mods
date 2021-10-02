@@ -102,7 +102,6 @@ namespace def_handy_portals
                     ZDOMan.instance.ForceSendZDO(item.m_uid);
                 }
             }
-            logger.LogWarning("m_pins list size " + m_pins.Count);
         }
 
         public static void Do_magic()
